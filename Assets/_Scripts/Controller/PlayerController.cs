@@ -6,9 +6,7 @@ public class PlayerController : MonoBehaviour {
     public float _maxPositionX;
     public float _minPositionX;
 
-
-    public Vector2 fingerStart;
-    public Vector2 fingerEnd;
+    public float _speed;
 
     void Start()
     {
@@ -21,15 +19,9 @@ public class PlayerController : MonoBehaviour {
         {
             foreach (Touch touch in Input.touches)
             {
-                if (touch.phase == TouchPhase.Began)
+                if (touch.phase == TouchPhase.Moved)
                 {
-                    fingerStart = touch.position;
-                    fingerEnd = touch.position;
-                }
-                else if (touch.phase == TouchPhase.Moved)
-                {
-                    //transform.Translate(touch.deltaPosition * Time.deltaTime);
-                    transform.Translate(new Vector2(touch.deltaPosition.x, 0) * Time.deltaTime);
+                    transform.Translate(new Vector2(touch.deltaPosition.x, 0) * Time.deltaTime * _speed);
                 }
             }
         }
@@ -59,10 +51,18 @@ public class PlayerController : MonoBehaviour {
         }
         else if (other.gameObject.tag == Tags.Bomb)
         {
-            int t = GameController.Instance._scoreGame;
-            t = t * 95 / 100;
-            GameController.Instance._scoreGame = t;
-            Destroy(other.gameObject);
+            if (!GameController.Instance._isFevering)
+            {
+                int t = GameController.Instance._scoreGame;
+                t = t * 95 / 100;
+                GameController.Instance._scoreGame = t;
+                Destroy(other.gameObject);
+            }
+            else
+            {
+                other.attachedRigidbody.AddForce(new Vector2(Random.value,Random.value) * 20, ForceMode2D.Impulse);
+            }
+            
         }
     }
 

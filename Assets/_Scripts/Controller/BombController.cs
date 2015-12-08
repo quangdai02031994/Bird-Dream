@@ -3,28 +3,17 @@ using System.Collections;
 
 public class BombController : MonoBehaviour {
 
-    /// <summary>
-    /// Khai bao cac doi tuong bomb va coin
-    /// </summary>
+   
     public GameObject bomb;
-    public GameObject coin;
+    public GameObject bomb2;
+    public GameObject bomb3;
 
-    /// <summary>
-    /// toa do max va min cua coin va bomb khi sinh ra
-    /// </summary>
     public float _maxPositionX;
     public float _minPositionX;
 
-    /// <summary>
-    ///Tong so bomb va coin toi da cung xuat hien, luong bomb+coin se tang dan theo thoi gian
-    /// </summary>
     public int _numberBomb;
-
     public int _maxChild;
 
-    /// <summary>
-    /// so luong bomb hoac coin hien co
-    /// </summary>
     public int _currentChild;
 
     public float timeCount;
@@ -47,27 +36,27 @@ public class BombController : MonoBehaviour {
             _currentChild = transform.childCount;
             timeCount += Time.deltaTime;
 
-
-
             if (timeCount > _rate && _numberBomb < _maxChild)
             {
                 _numberBomb++;
                 timeCount = 0;
-
             }
 
             if (_currentChild < _numberBomb)
             {
                 rand = Random.Range(_minPositionX, _maxPositionX);
-                int t = Random.Range(0, 5);
-
-                if (t == 0)
+                int x = Random.Range(0, 3);
+                if (x == 0)
                 {
-                    GenerateObject(coin, rand);
+                    GenerateObject(bomb, rand);
+                }
+                else if (x == 1)
+                {
+                    GenerateObject(bomb2, rand);
                 }
                 else
                 {
-                    GenerateObject(bomb, rand);
+                    GenerateObject(bomb3, rand);
                 }
             }
         }
@@ -75,13 +64,6 @@ public class BombController : MonoBehaviour {
         {
             _numberBomb = 1;
         }
-
-        //if (GameController.Instance._isFevering)
-        //{
-        //    if (transform.childCount > 0)
-        //        Destroy(transform.GetChild(0).gameObject);
-        //}
-        
     }
 
     public void GenerateObject(GameObject o,float postionX)
