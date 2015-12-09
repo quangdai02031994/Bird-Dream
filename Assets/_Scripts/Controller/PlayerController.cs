@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour {
     public float _maxPositionX;
     public float _minPositionX;
 
-    //public float _speed;
+    public float _delay;
 
     private Animator _animBird;
 
@@ -29,12 +29,13 @@ public class PlayerController : MonoBehaviour {
             {
                 if (touch.phase == TouchPhase.Began)
                 {
-                    _endPosition = touch.position;
+                    _delay = 0;
                 }
                 else if (touch.phase == TouchPhase.Moved)
                 {
-                    _endPosition = touch.position;
-                    transform.Translate(new Vector2(touch.deltaTime, 0) * Time.deltaTime);
+                    _delay += Time.deltaTime;
+                    if (_delay > 0.2f)
+                        transform.Translate(new Vector2(touch.deltaPosition.x, 0) * Time.deltaTime);
                     _animBird.speed += Time.deltaTime * 5;
                 }
                 else if (touch.phase == TouchPhase.Stationary)
@@ -47,8 +48,7 @@ public class PlayerController : MonoBehaviour {
                 }
                 else if (touch.phase == TouchPhase.Ended)
                 {
-                    //transform.DOMoveX(_endPosition.x, 0.3f);
-                    _endPosition = Vector2.zero;
+                    _delay = 0;
                 }
                 
             }
@@ -71,6 +71,10 @@ public class PlayerController : MonoBehaviour {
             transform.position = new Vector2(_minPositionX, transform.position.y);
         }
 
+        if (transform.position.y != 0)
+        {
+            transform.position = new Vector3(transform.position.x, 0, 0);
+        }
       
     }
 
