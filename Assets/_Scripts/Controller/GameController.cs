@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour {
     private float index;
 
     public float speed = 10;
+    public int _countFever;
     
 	void Start () {
         Instance = this;
@@ -31,6 +32,7 @@ public class GameController : MonoBehaviour {
         _isFevering = false;
         index = 0;
         _scoreGame = 0;
+        _countFever = 0;
         _coinGame = 0;
         txt_Score.text = "0";
         txt_Coin.text = "0";
@@ -52,11 +54,10 @@ public class GameController : MonoBehaviour {
 
             CheckFeverTime();
 
-            if (_coinGame % 10 == 0 && _coinGame != 0)
+            if (_countFever >= 10 && _countFever != 0 && _isFevering == false)
             {
                 btnFever.enabled = true;
             }
-
         }
         else
         {
@@ -90,6 +91,7 @@ public class GameController : MonoBehaviour {
         {
             feverTime.localPosition = new Vector2(-600, 0);
             _isFevering = false;
+            _countFever = 0;
         }
         
     }
