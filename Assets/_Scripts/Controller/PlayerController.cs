@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
 
     public float _delay;
 
+    public float _animBirdSpeed;
     private Animator _animBird;
 
     private Vector2 _endPosition;
@@ -16,7 +17,8 @@ public class PlayerController : MonoBehaviour {
     void Start()
     {
         _animBird = GetComponent<Animator>();
-        _animBird.speed = 0.5f;
+        //_animBird.speed = 0.5f;
+        _animBird.speed = _animBirdSpeed;
         RotateUp();
         
     }
@@ -34,13 +36,14 @@ public class PlayerController : MonoBehaviour {
                 else if (touch.phase == TouchPhase.Moved)
                 {
                     _delay += Time.deltaTime;
-                    if (_delay > 0.2f)
+                    //if (_delay > 0.15f)
                         transform.Translate(new Vector2(touch.deltaPosition.x, 0) * Time.deltaTime);
                     _animBird.speed += Time.deltaTime * 5;
                 }
                 else if (touch.phase == TouchPhase.Stationary)
                 {
                     _animBird.speed += Time.deltaTime * 5;
+                    //_delay = 0;
                     if (_animBird.speed > 3)
                     {
                         _animBird.speed = 3;
@@ -55,10 +58,18 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
-            _animBird.speed -= Time.deltaTime * 5;
-            if (_animBird.speed < 0.5f)
+            //_animBird.speed = _animBirdSpeed;
+            if (GameController.Instance._isFevering)
             {
-                _animBird.speed = 0.5f;
+                _animBird.speed = 5;
+            }
+            else
+            {
+                _animBird.speed -= Time.deltaTime * 5;
+                if (_animBird.speed < 0.5f)
+                {
+                    _animBird.speed = 0.5f;
+                }
             }
         }
 
@@ -71,9 +82,13 @@ public class PlayerController : MonoBehaviour {
             transform.position = new Vector2(_minPositionX, transform.position.y);
         }
 
-        if (transform.position.y != 0)
+        if (transform.position.y > 0.2f)
         {
-            transform.position = new Vector3(transform.position.x, 0, 0);
+            transform.position = new Vector3(transform.position.x, 0.2f, 0);
+        }
+        else if (transform.position.y < -0.2f)
+        {
+            transform.position = new Vector3(transform.position.x, -0.2f, 0);
         }
       
     }
@@ -118,12 +133,15 @@ public class PlayerController : MonoBehaviour {
 
     void RotateUp()
     {
+        transform.DOMoveY(0.2f, 0.5f);
         transform.DORotate(new Vector3(0, 0, 10), 0.5f).OnComplete(RotateDown);
     }
 
     void RotateDown()
     {
+        transform.DOMoveY(-0.2f, 0.5f);
         transform.DORotate(new Vector3(0, 0, 350), 0.5f).OnComplete(RotateUp);
+
     }
 
 }
