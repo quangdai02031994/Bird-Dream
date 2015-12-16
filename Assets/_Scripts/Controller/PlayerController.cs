@@ -126,13 +126,13 @@ public class PlayerController : MonoBehaviour {
                 int t = GameController.Instance._scoreGame;
                 t = t * 95 / 100;
                 GameController.Instance._scoreGame = t;
-                //transform.DOPunchPosition(new Vector3(0, 1, 0), 0.5f, 10, 1, true);
                 transform.DOPunchRotation(new Vector3(0, 0, 270), 0.2f, 10, 1);
                 Destroy(other.gameObject);
             }
             else
             {
-                other.attachedRigidbody.AddForce(new Vector2(Random.value,Random.value) * 20, ForceMode2D.Impulse);
+                other.attachedRigidbody.AddForce(new Vector2(Random.RandomRange(-2, 2), Random.RandomRange(2, 3)) * 20, ForceMode2D.Impulse);
+                StartCoroutine(DestroyBomb(other.gameObject));
             }
         }
     }
@@ -147,8 +147,13 @@ public class PlayerController : MonoBehaviour {
     {
         transform.DOMoveY(-0.2f, 0.5f);
         transform.DORotate(new Vector3(0, 0, 350), 0.5f).OnComplete(RotateUp);
-
     }
 
+    IEnumerator DestroyBomb(GameObject obj)
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(obj);
+        Debug.Log("Done");
+    }
 }
 
