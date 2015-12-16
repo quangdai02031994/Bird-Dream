@@ -10,8 +10,10 @@ public class PlayerController : MonoBehaviour {
     public float _delay;
 
     public float _animBirdSpeed;
-    private Animator _animBird;
 
+    public Tween _tweenPositon;
+    
+    private Animator _animBird;
     private Vector2 _endPosition;
 
     void Start()
@@ -122,6 +124,8 @@ public class PlayerController : MonoBehaviour {
                 int t = GameController.Instance._scoreGame;
                 t = t * 95 / 100;
                 GameController.Instance._scoreGame = t;
+                //transform.DOPunchPosition(new Vector3(0, 1, 0), 0.5f, 10, 1, true);
+                transform.DOPunchRotation(new Vector3(0, 0, 270), 0.2f, 10, 1);
                 Destroy(other.gameObject);
             }
             else
