@@ -14,12 +14,10 @@ public class PlayerController : MonoBehaviour {
     public Tween _tweenPositon;
     
     private Animator _animBird;
-    private Vector2 _endPosition;
 
     void Start()
     {
         _animBird = GetComponent<Animator>();
-        //_animBird.speed = 0.5f;
         _animBird.speed = _animBirdSpeed;
         RotateUp();
         
@@ -34,15 +32,14 @@ public class PlayerController : MonoBehaviour {
                 if (touch.phase == TouchPhase.Began)
                 {
                     _delay += Time.deltaTime;
-                    _endPosition = Vector2.zero;
+
                 }
                 else if (touch.phase == TouchPhase.Moved)
                 {
                     _delay += Time.deltaTime;
-                    if (_delay > 0.3f)
+                    //if (_delay > 0.3f)
                         transform.Translate(new Vector2(touch.deltaPosition.x, 0) * Time.deltaTime);
                     _animBird.speed += Time.deltaTime * 5;
-                    _endPosition = Input.mousePosition;
                 }
                 else if (touch.phase == TouchPhase.Stationary)
                 {
@@ -55,14 +52,12 @@ public class PlayerController : MonoBehaviour {
                 else if (touch.phase == TouchPhase.Ended)
                 {
                     _delay = 0;
-                    //transform.DOMoveX(_endPosition.x / 100, 0.2f);
                 }
                 
             }
         }
         else
         {
-            //_animBird.speed = _animBirdSpeed;
             if (GameController.Instance._isFevering)
             {
                 _animBird.speed = 5;
