@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MoveOffset : MonoBehaviour {
 
-    public Renderer rend;
+    private Renderer rend;
 
     public float scrollSpeed = 0.5f;
 

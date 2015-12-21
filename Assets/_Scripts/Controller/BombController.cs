@@ -8,6 +8,8 @@ public class BombController : MonoBehaviour {
     public GameObject bomb2;
     public GameObject bomb3;
 
+    public Camera _mainCamera;
+
     public float _maxPositionX;
     public float _minPositionX;
 
@@ -15,17 +17,19 @@ public class BombController : MonoBehaviour {
     public int _maxChild;
 
     public int _currentChild;
-
     public float timeCount;
 
     public int _rate;
-
     private float rand;
+
+    public Vector3 _positionCamera;
 
     void Start()
     {
         _numberBomb = 1;
-        
+        _positionCamera = _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+        _maxPositionX = _positionCamera.x - 0.5f;
+        _minPositionX = -_positionCamera.x + 0.5f;
     }
 
     void Update()

@@ -100,7 +100,6 @@ public class GameController : MonoBehaviour {
     {
         _isFevering = true;
         btnFever.enabled = !btnFever.enabled;
-        //_isGamePlaying = false;
     }
 
     public void PauseAndPlay()

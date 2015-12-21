@@ -3,28 +3,30 @@ using System.Collections;
 using DG.Tweening;
 
 public class PlayerController : MonoBehaviour {
-
+    
+    
+    public float _delay;
+    public Camera _mainCamera;
+/// <summary>
+/// Các thuộc tính private
+/// </summary>
+    public Vector3 _positionCamera;
     public float _maxPositionX;
     public float _minPositionX;
-
-    public float _delay;
-
-    public float _animBirdSpeed;
-
-    public Tween _tweenPositon;
-    
-    private Animator _animBird;
+    public Animator _animBird;
 
     void Start()
     {
         _animBird = GetComponent<Animator>();
-        _animBird.speed = _animBirdSpeed;
         RotateUp();
-        
+        _positionCamera = _mainCamera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+        _maxPositionX = _positionCamera.x - 0.5f;
+        _minPositionX = -_positionCamera.x + 0.5f;
     }
 
     void Update()
     {
+        
         if (Input.touchCount > 0)
         {
             foreach (Touch touch in Input.touches)
@@ -39,7 +41,7 @@ public class PlayerController : MonoBehaviour {
                     _delay += Time.deltaTime;
                     //if (_delay > 0.3f)
                         transform.Translate(new Vector2(touch.deltaPosition.x, 0) * Time.deltaTime);
-                    _animBird.speed += Time.deltaTime * 5;
+                        _animBird.speed += Time.deltaTime * 5;
                 }
                 else if (touch.phase == TouchPhase.Stationary)
                 {
@@ -126,7 +128,7 @@ public class PlayerController : MonoBehaviour {
             }
             else
             {
-                other.attachedRigidbody.AddForce(new Vector2(Random.RandomRange(-2, 2), Random.RandomRange(2, 3)) * 20, ForceMode2D.Impulse);
+                other.attachedRigidbody.AddForce(new Vector2(Random.Range(-2, 2), Random.Range(2, 3)) * 20, ForceMode2D.Impulse);
                 StartCoroutine(DestroyBomb(other.gameObject));
             }
         }
@@ -148,7 +150,6 @@ public class PlayerController : MonoBehaviour {
     {
         yield return new WaitForSeconds(1);
         Destroy(obj);
-        Debug.Log("Done");
     }
 }
 
