@@ -5,8 +5,6 @@ public class MoveOffset : MonoBehaviour {
 
     private Renderer rend;
 
-    public float scrollSpeed = 0.5f;
-
     public float offset;
 
     void Start()
@@ -16,8 +14,9 @@ public class MoveOffset : MonoBehaviour {
 
     void Update()
     {
-        offset = Time.time * scrollSpeed;
+        offset = Time.time * GameController.Instance._speedBackGround;
         rend.material.SetTextureOffset("_MainTex", new Vector2(offset, 0));
+
     }
 
 

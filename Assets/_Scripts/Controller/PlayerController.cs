@@ -3,17 +3,23 @@ using System.Collections;
 using DG.Tweening;
 
 public class PlayerController : MonoBehaviour {
-    
+
+    public static PlayerController Instance;
     
     public float _delay;
     public Camera _mainCamera;
-/// <summary>
-/// Các thuộc tính private
-/// </summary>
+
+
     public Vector3 _positionCamera;
     public float _maxPositionX;
     public float _minPositionX;
     public Animator _animBird;
+    public Vector3 _endTouchPosition;
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -26,7 +32,7 @@ public class PlayerController : MonoBehaviour {
 
     void Update()
     {
-        
+        #region Điều khiển Player
         if (Input.touchCount > 0)
         {
             foreach (Touch touch in Input.touches)
@@ -35,13 +41,17 @@ public class PlayerController : MonoBehaviour {
                 {
                     _delay += Time.deltaTime;
 
+                    _endTouchPosition = touch.position;
                 }
                 else if (touch.phase == TouchPhase.Moved)
                 {
                     _delay += Time.deltaTime;
-                    //if (_delay > 0.3f)
+                    if (_delay >= 0.3f)
+                    {
                         transform.Translate(new Vector2(touch.deltaPosition.x, 0) * Time.deltaTime);
-                        _animBird.speed += Time.deltaTime * 5;
+                    }
+                    _animBird.speed += Time.deltaTime * 5;
+                    _endTouchPosition = touch.position;
                 }
                 else if (touch.phase == TouchPhase.Stationary)
                 {
@@ -53,7 +63,14 @@ public class PlayerController : MonoBehaviour {
                 }
                 else if (touch.phase == TouchPhase.Ended)
                 {
+                   
+                    if (_delay < 0.3f)
+                    {
+                        transform.DOMoveX(_mainCamera.ScreenToWorldPoint(_endTouchPosition).x, 1);
+                        DOTween.To(() => transform.GetComponent<Animator>().speed, x => transform.GetComponent<Animator>().speed = x, 5, 0.3f);
+                    }
                     _delay = 0;
+                    _endTouchPosition = Vector3.zero;
                 }
                 
             }
@@ -73,7 +90,9 @@ public class PlayerController : MonoBehaviour {
                 }
             }
         }
+        #endregion
 
+        #region Giới hạn toạ độ của Player trong Scene
         if (transform.position.x > _maxPositionX)
         {
             transform.position = new Vector2(_maxPositionX, transform.position.y);
@@ -91,14 +110,10 @@ public class PlayerController : MonoBehaviour {
         {
             transform.position = new Vector3(transform.position.x, -0.2f, 0);
         }
-      
+        #endregion
     }
 
 
-    /// <summary>
-    /// Doan code nay de bat va cham voi coin hoac bomb
-    /// </summary>
-    /// <param name="other"></param>
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == Tags.Coin)
@@ -151,5 +166,18 @@ public class PlayerController : MonoBehaviour {
         yield return new WaitForSeconds(1);
         Destroy(obj);
     }
+
+    public void PauseTween()
+    {
+        //DOTween.timeScale = 0;
+        transform.DOPause();
+    }
+
+    public void PlayTween()
+    {
+        //DOTween.timeScale = 1;
+        transform.DOPlay();
+    }
+
 }
 
