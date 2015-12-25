@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour {
     
     public float _delay;
     public Camera _mainCamera;
-
+    public GameObject Tutorial;
 
     public Vector3 _positionCamera;
     public float _maxPositionX;
@@ -33,63 +33,66 @@ public class PlayerController : MonoBehaviour {
     void Update()
     {
         #region Điều khiển Player
-        if (Input.touchCount > 0)
-        {
-            foreach (Touch touch in Input.touches)
-            {
-                if (touch.phase == TouchPhase.Began)
-                {
-                    _delay += Time.deltaTime;
 
-                    _endTouchPosition = touch.position;
-                }
-                else if (touch.phase == TouchPhase.Moved)
-                {
-                    _delay += Time.deltaTime;
-                    if (_delay >= 0.3f)
-                    {
-                        transform.Translate(new Vector2(touch.deltaPosition.x, 0) * Time.deltaTime);
-                    }
-                    _animBird.speed += Time.deltaTime * 5;
-                    _endTouchPosition = touch.position;
-                }
-                else if (touch.phase == TouchPhase.Stationary)
-                {
-                    _animBird.speed += Time.deltaTime * 5;
-                    if (_animBird.speed > 3)
-                    {
-                        _animBird.speed = 3;
-                    }
-                }
-                else if (touch.phase == TouchPhase.Ended)
-                {
-                   
-                    if (_delay < 0.3f)
-                    {
-                        transform.DOMoveX(_mainCamera.ScreenToWorldPoint(_endTouchPosition).x, 1);
-                        DOTween.To(() => transform.GetComponent<Animator>().speed, x => transform.GetComponent<Animator>().speed = x, 5, 0.3f);
-                    }
-                    _delay = 0;
-                    _endTouchPosition = Vector3.zero;
-                }
-                
-            }
-        }
-        else
+        if (GameController.Instance._isGamePlaying)
         {
-            if (GameController.Instance._isFevering)
+            if (Input.touchCount > 0)
             {
-                _animBird.speed = 5;
+                foreach (Touch touch in Input.touches)
+                {
+                    if (touch.phase == TouchPhase.Began)
+                    {
+                        _delay += Time.deltaTime;
+                        _endTouchPosition = touch.position;
+                    }
+                    else if (touch.phase == TouchPhase.Moved)
+                    {
+                        _delay += Time.deltaTime;
+                        if (_delay >= 0.3f)
+                        {
+                            transform.Translate(new Vector2(touch.deltaPosition.x, 0) * Time.deltaTime);
+                        }
+                        _animBird.speed += Time.deltaTime * 5;
+                        _endTouchPosition = touch.position;
+                    }
+                    else if (touch.phase == TouchPhase.Stationary)
+                    {
+                        _animBird.speed += Time.deltaTime * 5;
+                        if (_animBird.speed > 3)
+                        {
+                            _animBird.speed = 3;
+                        }
+                    }
+                    else if (touch.phase == TouchPhase.Ended)
+                    {
+
+                        if (_delay < 0.3f)
+                        {
+                            transform.DOMoveX(_mainCamera.ScreenToWorldPoint(_endTouchPosition).x, 1);
+                            DOTween.To(() => transform.GetComponent<Animator>().speed, x => transform.GetComponent<Animator>().speed = x, 5, 0.3f);
+                        }
+                        _delay = 0;
+                        _endTouchPosition = Vector3.zero;
+                    }
+                }
             }
             else
             {
-                _animBird.speed -= Time.deltaTime * 5;
-                if (_animBird.speed < 0.5f)
+                if (GameController.Instance._isFevering)
                 {
-                    _animBird.speed = 0.5f;
+                    _animBird.speed = 5;
+                }
+                else
+                {
+                    _animBird.speed -= Time.deltaTime * 5;
+                    if (_animBird.speed < 0.5f)
+                    {
+                        _animBird.speed = 0.5f;
+                    }
                 }
             }
         }
+        
         #endregion
 
         #region Giới hạn toạ độ của Player trong Scene
@@ -112,8 +115,6 @@ public class PlayerController : MonoBehaviour {
         }
         #endregion
     }
-
-
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == Tags.Coin)
@@ -136,10 +137,20 @@ public class PlayerController : MonoBehaviour {
             if (!GameController.Instance._isFevering)
             {
                 int t = GameController.Instance._scoreGame;
-                t = t * 95 / 100;
+                t = t * 70 / 100;
                 GameController.Instance._scoreGame = t;
                 transform.DOPunchRotation(new Vector3(0, 0, 270), 0.2f, 10, 1);
                 Destroy(other.gameObject);
+                if (Tutorial.activeSelf)
+                {
+
+                    Tutorial.GetComponent<GameTutorial>()._score = Tutorial.GetComponent<GameTutorial>()._score * 70 / 100;
+                    if (Tutorial.GetComponent<GameTutorial>()._score < 0)
+                    {
+                        Tutorial.GetComponent<GameTutorial>()._score = 0;
+                    }
+                }
+                
             }
             else
             {
@@ -169,13 +180,11 @@ public class PlayerController : MonoBehaviour {
 
     public void PauseTween()
     {
-        //DOTween.timeScale = 0;
         transform.DOPause();
     }
 
     public void PlayTween()
     {
-        //DOTween.timeScale = 1;
         transform.DOPlay();
     }
 

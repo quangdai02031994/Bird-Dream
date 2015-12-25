@@ -8,6 +8,7 @@ public class IntroGameController : MonoBehaviour {
     public Transform BirdCage;
     public Transform Bird;
     public Transform Background;
+    public Transform Background2;
     public Transform Line;
 
 
@@ -58,12 +59,7 @@ public class IntroGameController : MonoBehaviour {
         }
         #endregion
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            BirdCage.DORotate(Vector3.zero, 0.3f).OnComplete(KillALL);
-            SlideToPlay.text = null;
-            StartCoroutine(BirdFlyOut());
-        }
+      
     }
 
 
@@ -92,7 +88,8 @@ public class IntroGameController : MonoBehaviour {
     void NextGame()
     {
         Line.DOMoveY(Line.position.y + 10, 3);
-        Background.DOMoveY(Background.position.y + 13, 3).OnComplete(LoadGamePlay);
+        Background.DOMoveY(12, 3);
+        Background2.DOMoveY(0, 3).OnComplete(LoadGamePlay);
     }
 
     void LoadGamePlay()

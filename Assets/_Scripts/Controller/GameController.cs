@@ -9,6 +9,10 @@ public class GameController : MonoBehaviour {
     
     public GameObject player;
     public GameObject Tutorials;
+    public GameObject BombParent;
+    public GameObject CoinParent;
+    public Transform Touch;
+
 
     public GameObject bobm;
     public GameObject coin;
@@ -17,10 +21,8 @@ public class GameController : MonoBehaviour {
     public Text txt_Coin;
     public RectTransform feverTime;
     public Button btnFever;
-    public GameObject btnExit;
 
 
-    public Transform Touch;
 
     public int _scoreGame;
     public int _coinGame;
@@ -29,7 +31,7 @@ public class GameController : MonoBehaviour {
     public bool _isGamePlaying;
     public bool _isFevering;
     public bool _isTutorial;
-    public bool _tutoPause;
+    public bool _startGame;
     
     private float timeCount;
     private GameObject _bomb;
@@ -41,14 +43,37 @@ public class GameController : MonoBehaviour {
     void Awake()
     {
         Instance = this;
+        if (PlayerPrefs.GetInt(Configs.Turn) == 0)
+        {
+            _isTutorial = true;
+        }
+        else
+        {
+            _isTutorial = false;
+            Tutorials.gameObject.SetActive(false);
+        }
+
     }
 
 	void Start () {
 
-        RestartGame();
-        player.transform.DOMove(Vector3.zero, 0.5f).OnComplete(EablePlayerScript);
-
-
+        player.transform.DOMove(Vector3.zero, 0.5f);
+        if (!_isTutorial)
+        {
+            RestartGame();
+        }
+        else
+        {
+            Time.timeScale = 1;
+            _isGamePlaying = false;
+            _isFevering = false;
+            timeCount = 0;
+            _scoreGame = 0;
+            _countFever = 0;
+            _coinGame = 0;
+            txt_Score.text = "0";
+            txt_Coin.text = "0";
+        }
 	}
 
 	void Update ()
@@ -56,11 +81,24 @@ public class GameController : MonoBehaviour {
        
         if (_isTutorial)
         {
-           
+            CheckFeverTime();
+            if (_countFever >= 10 && _countFever != 0 && _isFevering == false)
+            {
+                btnFever.enabled = true;
+            }
         }
         else
         {
             #region Game Playing
+            if (_startGame)
+            {
+                BombParent.SetActive(true);
+                CoinParent.SetActive(true);
+                Touch.gameObject.SetActive(true);
+                RestartGame();
+                player.transform.DOMove(Vector3.zero, 0.5f);
+                _startGame = false;
+            }
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -68,12 +106,10 @@ public class GameController : MonoBehaviour {
                 {
                     Touch.gameObject.SetActive(false);
                     _isGamePlaying = true;
-                    btnExit.SetActive(true);
                 }
             }
             if (_isGamePlaying)
             {
-               
                 timeCount += Time.deltaTime;
                 txt_Score.text = _scoreGame.ToString();
                 txt_Coin.text = _coinGame.ToString();
@@ -134,6 +170,7 @@ public class GameController : MonoBehaviour {
 
     private void RestartGame()
     {
+        Time.timeScale = 1;
         _isGamePlaying = false;
         _isFevering = false;
         timeCount = 0;
@@ -142,8 +179,8 @@ public class GameController : MonoBehaviour {
         _coinGame = 0;
         txt_Score.text = "0";
         txt_Coin.text = "0";
-        //Touch.DOScale(1, 0.5f).SetLoops(-1, LoopType.Yoyo);
-        //Ads.Instance.ShowBanner();
+        Touch.DOScale(1.5f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+        Ads.Instance.ShowBanner();
     }
    
     public void StartFevering()
@@ -156,13 +193,4 @@ public class GameController : MonoBehaviour {
     {
         Application.Quit();
     }
-
-
-    private void EablePlayerScript()
-    {
-        player.transform.GetComponent<PlayerController>().enabled = true;
-    }
-
-
-
 }
