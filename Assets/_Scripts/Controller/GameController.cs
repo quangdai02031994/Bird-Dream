@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour {
 
     public static GameController Instance;
     
-    public GameObject player;
+    public GameObject Player;
     public GameObject Tutorials;
     public GameObject BombParent;
     public GameObject CoinParent;
@@ -43,21 +43,21 @@ public class GameController : MonoBehaviour {
     void Awake()
     {
         Instance = this;
-        if (PlayerPrefs.GetInt(Configs.Turn) == 0)
-        {
-            _isTutorial = true;
-        }
-        else
-        {
-            _isTutorial = false;
-            Tutorials.gameObject.SetActive(false);
-        }
+        //if (PlayerPrefs.GetInt(Configs.Turn) == 0)
+        //{
+        //    _isTutorial = true;
+        //}
+        //else
+        //{
+        //    _isTutorial = false;
+        //    Tutorials.gameObject.SetActive(false);
+        //}
 
     }
 
 	void Start () {
 
-        player.transform.DOMove(Vector3.zero, 0.5f);
+        Player.transform.DOMove(Vector3.zero, 0.5f);
         if (!_isTutorial)
         {
             RestartGame();
@@ -96,7 +96,7 @@ public class GameController : MonoBehaviour {
                 CoinParent.SetActive(true);
                 Touch.gameObject.SetActive(true);
                 RestartGame();
-                player.transform.DOMove(Vector3.zero, 0.5f);
+                Player.transform.DOMove(Vector3.zero, 0.5f);
                 _startGame = false;
             }
 
@@ -105,6 +105,7 @@ public class GameController : MonoBehaviour {
                 if (!_isGamePlaying)
                 {
                     Touch.gameObject.SetActive(false);
+                    Player.GetComponent<PlayerController>().enabled = true;
                     _isGamePlaying = true;
                 }
             }

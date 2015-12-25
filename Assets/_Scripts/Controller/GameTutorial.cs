@@ -90,6 +90,7 @@ public class GameTutorial : MonoBehaviour {
                 Touch.gameObject.SetActive(false);
                 InvokeRepeating("CreateRandomCoin", 1, 1.5f);
                 StartCoroutine(PlayThree());
+                Player.GetComponent<PlayerController>().enabled = false;
                 _step = 4;
             }
         }
