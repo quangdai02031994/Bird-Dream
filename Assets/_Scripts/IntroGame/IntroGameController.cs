@@ -58,7 +58,12 @@ public class IntroGameController : MonoBehaviour {
             }
         }
         #endregion
-
+        if (Input.GetMouseButtonDown(0))
+        {
+            BirdCage.DORotate(Vector3.zero, 0.3f).OnComplete(KillALL);
+            SlideToPlay.text = null;
+            StartCoroutine(BirdFlyOut());
+        }
       
     }
 

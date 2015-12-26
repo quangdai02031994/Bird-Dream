@@ -11,18 +11,16 @@ public class GameController : MonoBehaviour {
     public GameObject Tutorials;
     public GameObject BombParent;
     public GameObject CoinParent;
+    
     public Transform Touch;
-
-
-    public GameObject bobm;
-    public GameObject coin;
 
     public Text txt_Score;
     public Text txt_Coin;
-    public RectTransform feverTime;
+    
     public Button btnFever;
 
-
+    public RectTransform FeverTimeParent;
+    public RectTransform _feverTimeChild;
 
     public int _scoreGame;
     public int _coinGame;
@@ -34,24 +32,23 @@ public class GameController : MonoBehaviour {
     public bool _startGame;
     
     private float timeCount;
-    private GameObject _bomb;
 
 
-    public float _speedFevering = 10;
+    public float _speedFevering;
     public float _speedBackGround = 0.5f;
 
     void Awake()
     {
         Instance = this;
-        //if (PlayerPrefs.GetInt(Configs.Turn) == 0)
-        //{
-        //    _isTutorial = true;
-        //}
-        //else
-        //{
-        //    _isTutorial = false;
-        //    Tutorials.gameObject.SetActive(false);
-        //}
+        if (PlayerPrefs.GetInt(Configs.Turn) == 0)
+        {
+            _isTutorial = true;
+        }
+        else
+        {
+            _isTutorial = false;
+            Tutorials.gameObject.SetActive(false);
+        }
 
     }
 
@@ -78,7 +75,15 @@ public class GameController : MonoBehaviour {
 
 	void Update ()
     {
-       
+        if (Ads.Instance.BannerOnScreen)
+        {
+            FeverTimeParent.anchoredPosition = new Vector3(0, 50 + Ads.Instance.BannerHeigh, 0);
+
+        }
+        else
+        {
+            FeverTimeParent.anchoredPosition = new Vector3(0, 50, 0);
+        }
         if (_isTutorial)
         {
             CheckFeverTime();
@@ -114,16 +119,12 @@ public class GameController : MonoBehaviour {
                 timeCount += Time.deltaTime;
                 txt_Score.text = _scoreGame.ToString();
                 txt_Coin.text = _coinGame.ToString();
-
-
                 if (timeCount > 1)
                 {
                     _scoreGame++;
                     timeCount = 0;
                 }
-
                 CheckFeverTime();
-
                 if (_countFever >= 10 && _countFever != 0 && _isFevering == false)
                 {
                     btnFever.enabled = true;
@@ -136,33 +137,31 @@ public class GameController : MonoBehaviour {
                 _coinGame = 0;
                 txt_Score.text = "0";
                 txt_Coin.text = "0";
-                feverTime.localPosition = new Vector2(-600, 0);
+                _feverTimeChild.localPosition = new Vector2(-800, 0);
             }
             #endregion
         }
-
-
     }
 
     private void CheckFeverTime()
     {
         
-        if (_isFevering == false)
+        if (!_isFevering)
         {
             Time.timeScale = 1;
-            if (feverTime.localPosition.x > 0)
+            if (_feverTimeChild.localPosition.x > 0)
             {
-                feverTime.localPosition = new Vector2(0, 0);
+                _feverTimeChild.localPosition = new Vector2(0, 0);
             }
         }
         else if(_isFevering)
         {
             Time.timeScale = 2;
-            feverTime.localPosition = new Vector2(feverTime.localPosition.x - Time.deltaTime * _speedFevering, 0);
+            _feverTimeChild.localPosition = new Vector2(_feverTimeChild.localPosition.x - Time.deltaTime * _speedFevering, 0);
         }
-        if (feverTime.localPosition.x < -600)
+        if (_feverTimeChild.localPosition.x < -800)
         {
-            feverTime.localPosition = new Vector2(-600, 0);
+            _feverTimeChild.localPosition = new Vector2(-800, 0);
             _isFevering = false;
             _countFever = 0;
         }
@@ -182,6 +181,7 @@ public class GameController : MonoBehaviour {
         txt_Coin.text = "0";
         Touch.DOScale(1.5f, 0.5f).SetLoops(-1, LoopType.Yoyo);
         Ads.Instance.ShowBanner();
+        Debug.Log(Ads.Instance.BannerHeigh);
     }
    
     public void StartFevering()
@@ -194,4 +194,6 @@ public class GameController : MonoBehaviour {
     {
         Application.Quit();
     }
+
+
 }

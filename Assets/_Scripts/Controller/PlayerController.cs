@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour {
                 GameController.Instance._coinGame++;
                 GameController.Instance._countFever++;
                 Destroy(other.gameObject);
-                GameController.Instance.feverTime.localPosition = new Vector2(GameController.Instance.feverTime.localPosition.x + 60, 0);
+                GameController.Instance._feverTimeChild.localPosition = new Vector2(GameController.Instance._feverTimeChild.localPosition.x + 80, 0);
             }
             else
             {

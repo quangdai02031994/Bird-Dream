@@ -5,6 +5,21 @@ public class Ads : MonoBehaviour {
 
     public static Ads Instance;
     public GoogleMobileAdBanner banner;
+    public int BannerHeigh
+    {
+        get
+        {
+            return banner.height;
+        }
+    }
+
+    public bool BannerOnScreen
+    {
+        get
+        {
+            return banner.IsOnScreen;
+        }
+    }
 
 
     void Awake()
@@ -25,5 +40,5 @@ public class Ads : MonoBehaviour {
         if (banner.IsLoaded && banner.IsOnScreen == false)
             banner.Show();
     }
-	
+
 }
