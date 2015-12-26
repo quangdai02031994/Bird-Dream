@@ -103,9 +103,8 @@ public class GameTutorial : MonoBehaviour {
         {
             if (_step == 2)
             {
-                Touch.gameObject.SetActive(true);
                 Touch.localPosition = new Vector3(1, -3.9f, 0);
-                Touch.localScale = new Vector3(5, -5, 0);
+                Touch.gameObject.SetActive(true);
                 _step = 3;
                 CancelInvoke();
             }
