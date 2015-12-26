@@ -181,7 +181,6 @@ public class GameController : MonoBehaviour {
         txt_Coin.text = "0";
         Touch.DOScale(1.5f, 0.5f).SetLoops(-1, LoopType.Yoyo);
         Ads.Instance.ShowBanner();
-        Debug.Log(Ads.Instance.BannerHeigh);
     }
    
     public void StartFevering()
