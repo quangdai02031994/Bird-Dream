@@ -77,12 +77,11 @@ public class GameController : MonoBehaviour {
     {
         if (Ads.Instance.BannerOnScreen)
         {
-            FeverTimeParent.anchoredPosition = new Vector3(0, 50 + Ads.Instance.BannerHeigh, 0);
-
+            FeverTimeParent.anchoredPosition = new Vector3(0, FeverTimeParent.sizeDelta.y / 2 + Ads.Instance.BannerHeigh, 0);
         }
         else
         {
-            FeverTimeParent.anchoredPosition = new Vector3(0, 50, 0);
+            FeverTimeParent.anchoredPosition = new Vector3(0, FeverTimeParent.sizeDelta.y / 2, 0);
         }
         if (_isTutorial)
         {
@@ -189,9 +188,14 @@ public class GameController : MonoBehaviour {
         btnFever.enabled = !btnFever.enabled;
     }
 
-    public void QuitGame()
+    public void BackIntroGame()
     {
-        Application.Quit();
+        int i = PlayerPrefs.GetInt(Configs.Coin);
+        i += _coinGame;
+        PlayerPrefs.SetInt(Configs.Coin, i);
+        PlayerPrefs.Save();
+        Ads.Instance.HideBanner();
+        Application.LoadLevel(SceneName.IntroName);
     }
 
 

@@ -6,19 +6,38 @@ public class PlayerController : MonoBehaviour {
 
     public static PlayerController Instance;
     
-    public float _delay;
     public Camera _mainCamera;
     public GameObject Tutorial;
 
-    public Vector3 _positionCamera;
+    public float _delay;
     public float _maxPositionX;
     public float _minPositionX;
+    
     public Animator _animBird;
+    
+    public Vector3 _positionCamera;
     public Vector3 _endTouchPosition;
+
+    public RuntimeAnimatorController anmBird2;
+    public RuntimeAnimatorController anmBird3;
+
+    public Sprite spBird2;
+    public Sprite spBird3;
 
     void Awake()
     {
         Instance = this;
+        string t = PlayerPrefs.GetString(Configs.PlayName);
+        if (t == ItemsShop.FlappyBird2)
+        {
+            transform.GetComponent<SpriteRenderer>().sprite = spBird2;
+            transform.GetComponent<Animator>().runtimeAnimatorController = anmBird2;
+        }
+        else if (t == ItemsShop.FlappyBird3)
+        {
+            transform.GetComponent<SpriteRenderer>().sprite = spBird3;
+            transform.GetComponent<Animator>().runtimeAnimatorController = anmBird3;
+        }
     }
 
     void Start()

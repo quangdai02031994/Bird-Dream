@@ -41,4 +41,10 @@ public class Ads : MonoBehaviour {
             banner.Show();
     }
 
+    public void HideBanner()
+    {
+        if (banner.IsOnScreen)
+            banner.Hide();
+    }
+
 }
