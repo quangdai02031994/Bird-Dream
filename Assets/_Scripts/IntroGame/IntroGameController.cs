@@ -93,7 +93,7 @@ public class IntroGameController : MonoBehaviour {
         #endregion
         //if (Input.GetMouseButtonDown(0))
         //{
-        //    BirdCage.DORotate(Vector3.zero, 0.3f).OnComplete(BirdCageStopTween);
+        //    BirdCage1.DORotate(Vector3.zero, 0.3f).OnComplete(BirdCageStopTween);
         //    StartCoroutine(BirdFlyOut());
         //}
       
